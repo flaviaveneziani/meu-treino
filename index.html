@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Interativo de Treino - Flávia</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --card-bg: #ffffff;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --success: #10b981;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+      color: var(--primary);
+      font-size: 1.8rem;
+    }
+
+    p.subtitle {
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    .day-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 15px;
+    }
+
+    .day-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .progress-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .exercise-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background-color: #f9fafb;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: background-color 0.2s;
+    }
+
+    .exercise-item.completed {
+      background-color: #ecfdf5;
+      border-color: #a7f3d0;
+      text-decoration: line-through;
+      opacity: 0.75;
+    }
+
+    .checkbox {
+      margin-top: 3px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: var(--success);
+    }
+
+    .exercise-details {
+      flex-grow: 1;
+    }
+
+    .exercise-name {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .exercise-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .exercise-meta span {
+      background: #eef2ff;
+      color: var(--primary);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .exercise-obs {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: #d97706;
+      font-style: italic;
+    }
+
+    .charge-input {
+      width: 70px;
+      padding: 3px 6px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .reset-btn {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 24px;
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .reset-btn:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Painel de Treino Semanal</h1>
+      <p class="subtitle">Acompanhe seu progresso diário e registre suas cargas</p>
+    </header>
+
+    <!-- SEGUNDA-FEIRA: LEG2 -->
+    <div class="day-card">
+      <div class="day-header">
+        <div class="day-title">Segunda-feira — Leg 2</div>
+        <div class="progress-text">0 / 5 concluídos</div>
+      </div>
+      <div class="exercise-list">
+        
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Agachamento - Barra - Livre</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>6-8 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Livre ou Smith</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Extensora Cadeira Articulada</div>
+            <div class="exercise-meta">
+              <span>3 séries</span> <span>10-12 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Pico de contração</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Flexão Nórdica Invertida - Solo</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>8-10 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Se tiver legpress pode fazer no lugar dela</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Agachamento Búlgaro - Duplo Halter - Banco Pé Anterior</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>6-8 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Colocar um step no pé da frente</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Adutor Cadeira Articulada</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>10-12 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TERÇA-FEIRA: PUSH -->
+    <div class="day-card">
+      <div class="day-header">
+        <div class="day-title">Terça-feira — Push</div>
+        <div class="progress-text">0 / 5 concluídos</div>
+      </div>
+      <div class="exercise-list">
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Supino Barra</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>6-8 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Progredir carga</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Elevação Lateral - Polia (Unilateral)</div>
+            <div class="exercise-meta">
+              <span>3 séries</span> <span>12-15 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Desenvolvimento</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>8-10 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Pode fazer com Halter ou barra</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Elevação Lateral - Halter</div>
+            <div class="exercise-meta">
+              <span>3 séries</span> <span>10-12 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Livre</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Tríceps Francês Corda</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>8-10 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- QUARTA-FEIRA: PULL -->
+    <div class="day-card">
+      <div class="day-header">
+        <div class="day-title">Quarta-feira — Pull</div>
+        <div class="progress-text">0 / 6 concluídos</div>
+      </div>
+      <div class="exercise-list">
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Puxada Triângulo</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>8-10 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Pico de contração</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Remada Serrote Halter</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>8-10 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Pico de contração</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Pulldown Unilateral</div>
+            <div class="exercise-meta">
+              <span>3 séries</span> <span>10-12 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Pico de contração</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Remada Baixa Corda - Neutra</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>10-12 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Fazer no Crossover com corda polia baixa</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Crucifixo Inverso - Crossover - Unilateral</div>
+            <div class="exercise-meta">
+              <span>3 séries</span> <span>10-12 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Rosca Direta - Duplo Halter - Banco Inclinado</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>8-10 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- QUINTA-FEIRA: LEGS -->
+    <div class="day-card">
+      <div class="day-header">
+        <div class="day-title">Quinta-feira — Legs</div>
+        <div class="progress-text">0 / 6 concluídos</div>
+      </div>
+      <div class="exercise-list">
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Mesa Flexora</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>10-12 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Stiff - Barra</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>8-10 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Abdutora 45°</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>12-15 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Step Up no Step</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>10-12 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Elevação Pélvica - Máquina Articulada</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>6-8 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Pode fazer na máquina ou livre</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Panturrilha no Smith</div>
+            <div class="exercise-meta">
+              <span>3 séries</span> <span>12-15 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SEXTA-FEIRA: UPPER -->
+    <div class="day-card">
+      <div class="day-header">
+        <div class="day-title">Sexta-feira — Upper</div>
+        <div class="progress-text">0 / 6 concluídos</div>
+      </div>
+      <div class="exercise-list">
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Supino - Halter - Banco Inclinado</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>8-10 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Elevação Frontal - Corda Polia Baixa</div>
+            <div class="exercise-meta">
+              <span>3 séries</span> <span>12-15 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">High Row</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>10-12 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Se não tiver a máquina faz no cross ou puxada aberta</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Remada Baixa Triângulo</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>10-12 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+            <div class="exercise-obs">Obs: Alongar bem e fazer pico de contração</div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Rosca Scott - Halter - Banco (Unilateral)</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>6-8 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Tríceps Pulley - Crossover - Barra - Polia Alta</div>
+            <div class="exercise-meta">
+              <span>4 séries</span> <span>8-10 reps</span>
+              <label>Carga: <input type="text" class="charge-input" placeholder="kg"></label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SÁBADO: DESCANSO / CORRIDA -->
+    <div class="day-card">
+      <div class="day-header">
+        <div class="day-title">Sábado — Cardio / Descanso Musculação</div>
+        <div class="progress-text">0 / 1 concluído</div>
+      </div>
+      <div class="exercise-list">
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Treino de Corrida</div>
+            <div class="exercise-obs">Descanso de musculação</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOMINGO: LIVRE -->
+    <div class="day-card">
+      <div class="day-header">
+        <div class="day-title">Domingo — Cardio Livre</div>
+        <div class="progress-text">0 / 1 concluído</div>
+      </div>
+      <div class="exercise-list">
+        <div class="exercise-item">
+          <input type="checkbox" class="checkbox" onchange="toggleExercise(this)">
+          <div class="exercise-details">
+            <div class="exercise-name">Escolha Livre: Corrida ou Spinning</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">Limpar Checklist da Semana</button>
+
+  </div>
+
+  <script>
+    function toggleExercise(checkbox) {
+      const item = checkbox.closest('.exercise-item');
+      if (checkbox.checked) {
+        item.classList.add('completed');
+      } else {
+        item.classList.remove('completed');
+      }
+      updateProgress(checkbox.closest('.day-card'));
+    }
+
+    function updateProgress(card) {
+      const total = card.querySelectorAll('.checkbox').length;
+      const checked = card.querySelectorAll('.checkbox:checked').length;
+      const progressText = card.querySelector('.progress-text');
+      progressText.textContent = `${checked} / ${total} concluídos`;
+    }
+
+    function resetAll() {
+      if (confirm("Deseja realmente desmarcar todos os exercícios?")) {
+        document.querySelectorAll('.checkbox').forEach(cb => {
+          cb.checked = false;
+          cb.closest('.exercise-item').classList.remove('completed');
+        });
+        document.querySelectorAll('.day-card').forEach(card => {
+          updateProgress(card);
+        });
+      }
+    }
+  </script>
+</body>
+</html>
